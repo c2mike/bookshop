@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+    <resultMap id="usermap" type="Dao.User">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="password" column="password"></result>
+        <result property="email" column="email"></result>
+        <result property="phone" column="phone"></result>
+        <result property="address" column="address"></result>
+    </resultMap>
+
+    <insert id="insertone" parameterType="Dao.User">
+        insert into user(username,password,address,phone,email) values(#{username},#{password},#{address},#{phone},#{email})
+    </insert>
+
+    <select id="selectone" parameterType="map" resultMap="usermap" flushCache="true">
+        select * from user
+        <where>
+            <if test="username!=null">
+                and username = #{username}
+            </if>
+
+            <if test="password!=null">
+                and password = #{password}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectprivilege" parameterType="int" resultType="string" flushCache="true">
+       select name from privilege where id in (select privilegeid from user_privilege where user_privilege.userid = #{id})
+    </select>
+</mapper>

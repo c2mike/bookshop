@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="order">
+<resultMap id="orderitem" type="Dao.OrderItem">
+    <id property="id" column="id"/>
+    <result property="orderid" column="orderid"/>
+    <result property="bookid" column="bookid"></result>
+    <result property="count" column="count"></result>
+    <result property="price" column="price"></result>
+</resultMap>
+
+    <resultMap id="order" type="Dao.Order">
+        <id property="id" column="id"/>
+        <result property="date" column="date"/>
+        <result property="userid" column="userid"/>
+        <result property="state" column="state"/>
+        <result property="price" column="price"/>
+    </resultMap>
+
+    <insert id="insertone" parameterType="Dao.Order" useGeneratedKeys="true" keyProperty="id">
+        insert into orders(date,userid,state,price) values(#{date},#{userid},#{state},#{price})
+    </insert>
+
+    <insert id="insertitems" parameterType="java.util.List">
+        insert into orderitem(orderid,bookid,count,price) values
+        <foreach collection="list" item="orderitem" index="index" separator=",">
+            (#{orderitem.orderid},
+            #{orderitem.bookid},
+            #{orderitem.count},
+            #{orderitem.price} )
+        </foreach>
+    </insert>
+
+    <select id="selectbyorderid" parameterType="int" resultMap="order" flushCache="true">
+        select * from orders where id = #{id}
+    </select>
+
+    <select id="selectorderitem" parameterType="int" resultMap="orderitem" flushCache="true">
+        select * from orderitem where orderid = #{id}
+    </select>
+
+    <select id="selectbyuserid" parameterType="int" resultMap="order" flushCache="true">
+        select * from orders where userid = #{userid}
+    </select>
+
+    <update id="updateone" parameterType="Dao.Order">
+        update orders set state = ${state} where id = ${id}
+    </update>
+</mapper>

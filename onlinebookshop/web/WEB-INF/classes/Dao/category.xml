@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="category">
+<resultMap type="Dao.Category" id="map1">
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+    <result property="description" column="description"/>
+</resultMap>
+    <insert id="add" parameterType="Dao.Category">
+        insert into category(name,description) values(#{name},#{description})
+    </insert>
+
+    <select id="find" parameterType="int" resultMap="map1" flushCache="true">
+        select * from category where id = #{id}
+    </select>
+
+    <select id="count" resultType="java.lang.Integer" flushCache="true" >
+        select count(*) from category
+    </select>
+
+    <select id="findall" resultMap="map1" flushCache="true">
+        select * from category
+    </select>
+
+    <select id="selectpagedata" resultMap="map1" parameterType="map" flushCache="true">
+        select * from category limit #{start},#{end}
+    </select>
+
+    <delete id="del" parameterType="int">
+        delete from category where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="Dao.Category">
+        update category set name = #{name} ,description = #{description} where id = #{id}
+    </update>
+</mapper>
